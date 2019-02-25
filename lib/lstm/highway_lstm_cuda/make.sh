@@ -12,7 +12,7 @@ CUDA_PATH=/usr/local/cuda/
 #   35                    K40, K20
 #   30                    K10, Grid K520 (AWS G2)
 
-CUDA_MODELS=(52 61)
+#CUDA_MODELS=(52 61)
 
 # Nvidia doesn't guarantee binary compatability across GPU versions.
 # However, binary compatibility within one GPU generation can be guaranteed
@@ -26,17 +26,17 @@ CUDA_MODELS=(52 61)
 # runtime by the CUDA driver. See:
 # http://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#gpu-compilation
 # http://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#fatbinaries
-CUDA_MODEL_TARGETS=""
-for i in "${CUDA_MODELS[@]}"
-do
-        CUDA_MODEL_TARGETS+=" -gencode arch=compute_${i},code=sm_${i}"
-done
+#CUDA_MODEL_TARGETS=""
+#for i in "${CUDA_MODELS[@]}"
+#do
+#        CUDA_MODEL_TARGETS+=" -gencode arch=compute_${i},code=sm_${i}"
+#done
 
-echo "Building kernel for following target architectures: "
-echo $CUDA_MODEL_TARGETS
+#echo "Building kernel for following target architectures: "
+#echo $CUDA_MODEL_TARGETS
 
 cd src
 echo "Compiling kernel"
-/usr/local/cuda/bin/nvcc -c -o highway_lstm_kernel.cu.o highway_lstm_kernel.cu --compiler-options -fPIC $CUDA_MODEL_TARGETS
+/usr/local/cuda/bin/nvcc -c -o highway_lstm_kernel.cu.o highway_lstm_kernel.cu -x cu -Xcompiler -fPIC -arch=sm_52
 cd ../
 python build.py
